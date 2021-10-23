@@ -1,11 +1,10 @@
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets
-from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny
-
-from .serializers import ReadOnlyUserSerializer, WriteOnlyUserSerializer, AuthToken
-from rest_framework import status
 from rest_framework.response import Response
+
+from .serializers import ReadOnlyUserSerializer, \
+    WriteOnlyUserSerializer
 
 User = get_user_model()
 
@@ -13,7 +12,6 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = ReadOnlyUserSerializer
-    permission_classes = [ReadOnlyUserSerializer]
 
     def get_permissions(self):
         if self.action == 'create':
@@ -31,8 +29,6 @@ class UserViewSet(viewsets.ModelViewSet):
         user.save()
         serializer = ReadOnlyUserSerializer(user)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-
-
-class CustomObtainAuthToken(ObtainAuthToken):
-    serializer_class = AuthToken
+        return Response(serializer.data,
+                        status=status.HTTP_201_CREATED,
+                        headers=headers)
