@@ -37,15 +37,9 @@ class WriteOnlyUserSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(max_length=30)
     last_name = serializers.CharField(max_length=150)
     password = serializers.CharField(max_length=128, min_length=1)
-    is_active = serializers.BooleanField(
-        default=None,
-        help_text='Designates whether this user should be treated as active. '
-                  'Unselect this instead of deleting accounts.'
-    )
 
     class Meta:
-        fields = ('username', 'first_name', 'last_name',
-                  'is_active', 'password')
+        fields = ('username', 'first_name', 'last_name', 'password')
         model = User
 
     def validate_username(self, data):
